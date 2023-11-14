@@ -178,10 +178,6 @@ class RegisterFormState extends State<RegisterForm> {
                             lastNameController.text,
                             usernameController.text
                         );
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Registering...')),
-                        );
                       }
                     },
                     style: ElevatedButton.styleFrom(
