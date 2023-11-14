@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:todo/Home/homepage_v.dart';
+import 'package:todo/Login/login_v.dart';
 
 class RegisterViewModel {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -26,8 +26,7 @@ class RegisterViewModel {
         "username": username
       };
 
-      await _db.collection("users").add(user).then((DocumentReference doc) =>
-          print('DocumentSnapshot added with ID: ${doc.id}'));
+      await _db.collection("users").doc(email).set(user).onError((e, _) => print("Error writing document: $e"));
 
       // Registration successful, show a success message.
       await ScaffoldMessenger.of(context).showSnackBar(
@@ -35,7 +34,7 @@ class RegisterViewModel {
       );
 
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const Homepage()),
+        MaterialPageRoute(builder: (context) => LoginView()),
       );
     } catch (e) {
       // Handle registration errors, e.g., display an error message.

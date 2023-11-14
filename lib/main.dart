@@ -6,6 +6,7 @@ import 'package:todo/Settings/settings_v.dart';
 import 'package:todo/Theme/darkThemeProvider.dart';
 import 'package:todo/Login/login_v.dart';
 import 'package:todo/Register/register_v.dart';
+import 'package:todo/Todo/todo_v.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -64,9 +65,10 @@ class _MyAppState extends State<MyApp> {
               // When navigating to the "/" route, build the FirstScreen widget.
               '/': (context) => const Homepage(),
               // When navigating to the "/second" route, build the SecondScreen widget.
-              '/login': (context) => const LoginView(),
+              '/login': (context) =>    LoginView(),
               '/register': (context) => RegisterView(),
               '/settings': (context) => const SettingsView(),
+              '/todo': (context) =>     TodoView(),
             },
           );
         },

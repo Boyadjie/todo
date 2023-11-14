@@ -2,8 +2,11 @@ import 'package:todo/widgets/formInput.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/colors.dart';
 
+import 'package:todo/Login/login_vm.dart';
+
+
 class LoginView extends StatelessWidget {
-  const LoginView({Key? key}) : super(key: key);
+  final LoginViewModel viewModel = LoginViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class LoginView extends StatelessWidget {
                   color: CustomColorsLight.textBlack,
                 ),
               ),
-              const LoginForm(),
+              LoginForm(viewModel: viewModel),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Container(
@@ -53,7 +56,9 @@ class LoginView extends StatelessWidget {
 
 // Login Form
 class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+  final LoginViewModel viewModel;
+
+  const LoginForm({Key? key, required this.viewModel}) : super(key: key);
 
   @override
   LoginFormState createState() {
@@ -64,9 +69,18 @@ class LoginForm extends StatefulWidget {
 // Login State class.
 // This class holds data related to the form.
 class LoginFormState extends State<LoginForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    passwordController.dispose();
+    emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +95,7 @@ class LoginFormState extends State<LoginForm> {
             children: [
               //Username or e-mail ---------------------------------------------
               FormInputText(
+                controller: emailController,
                 inputLabel: "Nom d'utilisateur ou adresse e-mail",
                 inputFontSize: 14,
                 validate: (value) {
@@ -92,6 +107,7 @@ class LoginFormState extends State<LoginForm> {
               ),
               // Password ------------------------------------------------------
               FormInputText(
+                controller: passwordController,
                 inputLabel: "Mot de passe",
                 inputFontSize: 14,
                 validate: (value) {
@@ -109,7 +125,7 @@ class LoginFormState extends State<LoginForm> {
                     ),
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Et ba sheh ! 🖕')),
+                        const SnackBar(content: Text('Et ba sheh ! 🫶')),
                       );
                     }
                 ),
@@ -118,13 +134,13 @@ class LoginFormState extends State<LoginForm> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Center(
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Processing Data')),
+                        await widget.viewModel.loginUser(
+                            context,
+                            emailController.text,
+                            passwordController.text,
                         );
                       }
                     },
