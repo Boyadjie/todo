@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Home/homepage_v.dart';
 
-import 'package:todo/Settings/settings_v.dart';
 import 'package:todo/Theme/darkThemeProvider.dart';
 import 'package:todo/Login/login_v.dart';
 import 'package:todo/Register/register_v.dart';
@@ -67,7 +66,6 @@ class _MyAppState extends State<MyApp> {
               // When navigating to the "/second" route, build the SecondScreen widget.
               '/login': (context) =>    LoginView(),
               '/register': (context) => RegisterView(),
-              '/settings': (context) => TodoView(),
               '/todo': (context) =>     TodoView(),
             },
           );

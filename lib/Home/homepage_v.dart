@@ -29,15 +29,6 @@ class Homepage extends StatelessWidget {
                       Navigator.pushNamed(context, '/register');
                     }
                 ),
-                FullWidthButton(
-                    buttonText: 'SETTINGS',
-                    buttonFontSize: 18,
-                    backgroundColor: CustomColorsLight.grey,
-                    textColor: CustomColorsLight.textBlack,
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/settings');
-                    }
-                ),
               ],
             ),
           ],
