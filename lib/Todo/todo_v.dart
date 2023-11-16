@@ -61,6 +61,10 @@ class _TodoViewState extends State<TodoForm> {
             controller: _taskController,
             decoration: const InputDecoration(
               hintText: 'Enter a task',
+              focusedBorder: UnderlineInputBorder(
+                borderSide: const BorderSide(color: CustomColorsLight.orange, width: 1.5),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(4.0), topRight: Radius.circular(4.0)),
+              ),
             ),
           ),
         ),

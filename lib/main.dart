@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'Home/homepage_v.dart';
+import './colors.dart';
 
 import 'package:todo/Theme/darkThemeProvider.dart';
 import 'package:todo/Login/login_v.dart';
@@ -56,6 +57,9 @@ class _MyAppState extends State<MyApp> {
         builder: (BuildContext context, value, Widget? child) {
           return MaterialApp(
             title: 'Flutter Demo',
+            theme: ThemeData(
+              textSelectionTheme: TextSelectionThemeData( cursorColor: CustomColorsLight.textBlack )
+            ),
             initialRoute: '/',
             // debugShowCheckedModeBanner: false,
             // theme: Styles.themeData(themeChangeProvider.darkTheme, context),

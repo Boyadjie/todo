@@ -22,6 +22,7 @@ class Homepage extends StatelessWidget {
                     Navigator.pushNamed(context, '/login');
                   }
                 ),
+                const SizedBox(height: 50),
                 FullWidthButton(
                     buttonText: 'INSCRIPTION',
                     backgroundColor: CustomColorsLight.orange,
@@ -31,6 +32,7 @@ class Homepage extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(height: 50),
           ],
         ),
       ),

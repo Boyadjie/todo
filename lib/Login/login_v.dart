@@ -109,6 +109,7 @@ class LoginFormState extends State<LoginForm> {
               ),
               // Password ------------------------------------------------------
               FormInputText(
+                obscureText: true,
                 controller: passwordController,
                 inputLabel: "Mot de passe",
                 inputFontSize: 14,
