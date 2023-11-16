@@ -11,44 +11,46 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 100),
-              const Text(
-                'Se connecter à Todo',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: CustomColorsLight.textBlack,
-                ),
-              ),
-              LoginForm(viewModel: viewModel),
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Container(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Nouveau sur Todo ?"),
-                      TextButton(
-                          child: const Text(
-                            "S'inscrire",
-                            style: TextStyle(
-                              color: CustomColorsLight.textBlack,
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/register');
-                          }
-                      ),
-                    ],
+      body: SingleChildScrollView(
+        child: Center(
+            child: Column(
+              children: [
+                const SizedBox(height: 100),
+                const Text(
+                  'Se connecter à Todo',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25,
+                    color: CustomColorsLight.textBlack,
                   ),
                 ),
-              ),
-            ],
-          )
+                LoginForm(viewModel: viewModel),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Nouveau sur Todo ?"),
+                        TextButton(
+                            child: const Text(
+                              "S'inscrire",
+                              style: TextStyle(
+                                color: CustomColorsLight.textBlack,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pushNamed(context, '/register');
+                            }
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )
+        ),
       ),
     );
   }
@@ -96,11 +98,11 @@ class LoginFormState extends State<LoginForm> {
               //Username or e-mail ---------------------------------------------
               FormInputText(
                 controller: emailController,
-                inputLabel: "Nom d'utilisateur ou adresse e-mail",
+                inputLabel: "Adresse e-mail",
                 inputFontSize: 14,
                 validate: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Nom d'utilisateur ou adresse e-mail incorrect";
+                    return "Adresse e-mail incorrect";
                   }
                   return null;
                 },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo/widgets/formInput.dart';
 import 'package:todo/colors.dart';
+import 'package:todo/validations.dart';
 
 import 'package:todo/Register/register_vm.dart';
 
@@ -52,6 +53,7 @@ class RegisterFormState extends State<RegisterForm> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final String error = '';
 
   final _formKey = GlobalKey<FormState>();
 
@@ -126,13 +128,17 @@ class RegisterFormState extends State<RegisterForm> {
               ),
               // Password ------------------------------------------------------
               FormInputText(
+                obscureText: true,
                 controller: passwordController,
                 inputLabel: "Mot de passe",
                 inputFontSize: 12,
                 inputFontWeight: FontWeight.bold,
                 validate: (value) {
-                  if (value == null || value.isEmpty) {
+                  if(value == null || value.isEmpty){
                     return "Mot de passe non valide";
+                  }
+                  if(!isPasswordValid(value)) {
+                    return 'Doit contenir :\n- Au moins 12 charactères\n- Des majuscules\n Des charactères spéciaux : !@#\$%^&*()_+{}\[\]:;<>,.?~\\-';
                   }
                   return null;
                 },
@@ -144,8 +150,8 @@ class RegisterFormState extends State<RegisterForm> {
                 inputFontSize: 12,
                 inputFontWeight: FontWeight.bold,
                 validate: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Adresse e-mail non valide";
+                  if (value == null || value.isEmpty || !isEmailValid(value)){
+                    return "Adresse email non valide";
                   }
                   return null;
                 },
@@ -168,16 +174,23 @@ class RegisterFormState extends State<RegisterForm> {
                 child: Center(
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Validate returns true if the form is valid, or false otherwise.
                       if (_formKey.currentState!.validate()) {
-                        await widget.viewModel.registerUser(
-                            context,
-                            emailController.text,
-                            passwordController.text,
-                            firstNameController.text,
-                            lastNameController.text,
-                            usernameController.text
-                        );
+                        if(isPasswordValid(passwordController.text)) {
+                          if(isEmailValid(emailController.text)) {
+                            await widget.viewModel.registerUser(
+                                context,
+                                emailController.text,
+                                passwordController.text,
+                                firstNameController.text,
+                                lastNameController.text,
+                                usernameController.text
+                            );
+                          }else {
+                            print("Invalid Email !");
+                          }
+                        }else {
+                          print("Invalid password ! It must contains 12 characters, majuscules and numbers");
+                        }
                       }
                     },
                     style: ElevatedButton.styleFrom(

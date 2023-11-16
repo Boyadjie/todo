@@ -9,6 +9,7 @@ class FormInputText extends StatefulWidget {
   final String? Function(String? value) validate;
   final Widget? counter;
   final TextEditingController? controller;
+  final bool obscureText;
 
   const FormInputText({
     Key? key,
@@ -18,7 +19,8 @@ class FormInputText extends StatefulWidget {
     this.inputFontWeight = FontWeight.normal,
     this.padding = const EdgeInsets.symmetric(vertical: 10),
     this.counter,
-    this.controller
+    this.controller,
+    this.obscureText = false,
   }) : super(key: key);
 
   @override
@@ -40,6 +42,7 @@ class _FormInputTextState extends State<FormInputText> {
             ),),
             const SizedBox(height: 10),
             TextFormField(
+              obscureText: widget.obscureText,
               controller: widget.controller,
               style: TextStyle(
                 fontSize: widget.inputFontSize,
