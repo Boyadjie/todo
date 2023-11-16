@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:todo/Todo/todo_v.dart';
 
 class TodoViewModel {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -67,6 +68,9 @@ class TodoViewModel {
 
         // send to db
         await _db.collection("tasks").doc(title).set(task).onError((e, _) => print("Error writing document: $e"));
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => TodoView()),
+        );
       }
 
     } catch (e) {
@@ -91,6 +95,10 @@ class TodoViewModel {
 
       // update in db
       await _db.collection("tasks").doc(title).update(task).onError((e, _) => print("Error updating document: $e"));
+
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => TodoView()),
+      );
     } catch (e) {
       // Handle registration errors, e.g., display an error message.
       print('Can\'t create task: $e');

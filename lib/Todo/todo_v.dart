@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/Todo/todo_vm.dart';
+import '../colors.dart';
 
 class TodoView extends StatelessWidget {
   final TodoViewModel viewModel = TodoViewModel();
@@ -35,7 +36,8 @@ class _TodoViewState extends State<TodoForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Todo List'),
+        title: Text('Todo List'),
+        backgroundColor: CustomColorsLight.orange,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -68,6 +70,10 @@ class _TodoViewState extends State<TodoForm> {
             _taskController.clear();
           },
           child: const Text('Add'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: CustomColorsLight.orange,
+            elevation: 0,
+          ),
         ),
       ],
     );
@@ -75,12 +81,8 @@ class _TodoViewState extends State<TodoForm> {
 
   Widget _buildTaskList(BuildContext context) {
     return FutureBuilder<List<TaskInfo>>(
-      future: widget.viewModel.getTaskList(), // Modify your ViewModel to return a List<TaskInfo>
+      future: widget.viewModel.getTaskList(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
-        }
-
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
@@ -104,6 +106,7 @@ class _TodoViewState extends State<TodoForm> {
       title: Text(taskInfo.title),
       leading: Checkbox(
         value: taskInfo.completed,
+        activeColor: CustomColorsLight.orange,
         onChanged: (value) async {
           if (mounted) {
             await widget.viewModel.updateTask(context, taskInfo.title);
