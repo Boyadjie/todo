@@ -1,109 +1,114 @@
-import 'package:todo/widgets/formInput.dart';
 import 'package:flutter/material.dart';
-import 'package:todo/colors.dart';
+import 'package:todo/Todo/todo_vm.dart';
 
 class TodoView extends StatelessWidget {
-  const TodoView({Key? key}) : super(key: key);
+  final TodoViewModel viewModel = TodoViewModel();
+
+  @override
+  Widget build(BuildContext context) {
+    return TodoForm(viewModel: viewModel);
+  }
+}
+
+class TodoForm extends StatefulWidget {
+  final TodoViewModel viewModel;
+
+  const TodoForm({Key? key, required this.viewModel}) : super(key: key);
+
+  @override
+  _TodoViewState createState() {
+    return _TodoViewState();
+  }
+}
+
+class _TodoViewState extends State<TodoForm> {
+  TextEditingController _taskController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _taskController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 100),
-              const Text(
-                'Ma Todo Liste',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                  color: CustomColorsLight.textBlack,
-                ),
-              ),
-              const AddTaskForm(),
-            ],
-          )
+      appBar: AppBar(
+        title: const Text('Todo List'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildTaskForm(context),
+            const SizedBox(height: 20),
+            _buildTaskList(context),
+          ],
+        ),
       ),
     );
   }
-}
 
-// Login Form
-class AddTaskForm extends StatefulWidget {
-  const AddTaskForm({super.key});
-
-  @override
-  AddTaskFormState createState() {
-    return AddTaskFormState();
-  }
-}
-
-// Login State class.
-// This class holds data related to the form.
-class AddTaskFormState extends State<AddTaskForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  final _formKey = GlobalKey<FormState>();
-
-  @override
-  Widget build(BuildContext context) {
-    // Build a Form widget using the _formKey created above.
-    return Form(
-      key: _formKey,
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(40,30,40,10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              //Label ---------------------------------------------
-              FormInputText(
-                inputLabel: "Nom de l'élément",
-                inputFontSize: 14,
-                validate: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Ce champ est obligatoire";
-                  }
-                  return null;
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Validate returns true if the form is valid, or false otherwise.
-                      if (_formKey.currentState!.validate()) {
-                        // If the form is valid, display a snackbar. In the real world,
-                        // you'd often call a server or save the information in a database.
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Ajout a la liste...')),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: CustomColorsLight.orange,
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(50)),
-                      ),
-                    ),
-                    child: const Text(
-                      'Ajouter',
-                      style: TextStyle(
-                        color: CustomColorsLight.textBlack,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+  Widget _buildTaskForm(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _taskController,
+            decoration: const InputDecoration(
+              hintText: 'Enter a task',
+            ),
           ),
         ),
+        ElevatedButton(
+          onPressed: () async {
+            await widget.viewModel.createTask(context, _taskController.text);
+            _taskController.clear();
+          },
+          child: const Text('Add'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTaskList(BuildContext context) {
+    return FutureBuilder<List<TaskInfo>>(
+      future: widget.viewModel.getTaskList(), // Modify your ViewModel to return a List<TaskInfo>
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return CircularProgressIndicator();
+        }
+
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        final tasks = snapshot.data ?? [];
+
+        return Expanded(
+          child: ListView.builder(
+            itemCount: tasks.length,
+            itemBuilder: (context, index) {
+              return _buildTaskItem(tasks[index]);
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTaskItem(TaskInfo taskInfo) {
+    return ListTile(
+      title: Text(taskInfo.title),
+      leading: Checkbox(
+        value: taskInfo.completed,
+        onChanged: (value) async {
+          if (mounted) {
+            await widget.viewModel.updateTask(context, taskInfo.title);
+          }
+        },
       ),
     );
   }

@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
               // When navigating to the "/second" route, build the SecondScreen widget.
               '/login': (context) =>    LoginView(),
               '/register': (context) => RegisterView(),
-              '/settings': (context) => const SettingsView(),
+              '/settings': (context) => TodoView(),
               '/todo': (context) =>     TodoView(),
             },
           );

@@ -33,7 +33,7 @@ class LoginViewModel {
 
         // Navigate to the TodoView page
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const TodoView()),
+          MaterialPageRoute(builder: (context) => TodoView()),
         );
       } else {
         // Handle the case where the user document doesn't exist
