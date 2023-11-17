@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:todo/Todo/todo_v.dart';
 
 class TodoViewModel {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<String> getAuthUsername() async {
+    final myAuth = _auth.currentUser;
+
+    final docSnapshot = await _db.collection("users").doc(myAuth?.email).get();
+    final userDetails = docSnapshot?.data() as Map<String, dynamic>;
+
+    // Retrieve the username from the document
+    final username = userDetails['username'] as String;
+
+    return username ?? ''; // Return the email or an empty string if it's null
+  }
 
   Future<List<TaskInfo>> getTaskList() async {
     List<TaskInfo> taskList = [];

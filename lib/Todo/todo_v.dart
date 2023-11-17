@@ -24,6 +24,7 @@ class TodoForm extends StatefulWidget {
 
 class _TodoViewState extends State<TodoForm> {
   TextEditingController _taskController = TextEditingController();
+  late Future<String> usernameFuture;
 
   @override
   void dispose() {
@@ -33,10 +34,28 @@ class _TodoViewState extends State<TodoForm> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    usernameFuture = widget.viewModel.getAuthUsername();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo List'),
+        title: FutureBuilder<String>(
+          future: usernameFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text('todo List');
+            } else if (snapshot.hasError) {
+              return Text('todo List');
+            } else {
+              final username = snapshot.data ?? '';
+              return Text('$username todo List');
+            }
+          },
+        ),
         backgroundColor: CustomColorsLight.orange,
       ),
       body: Padding(
